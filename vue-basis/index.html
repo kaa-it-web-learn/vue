@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue JS</title>
+    <style>
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 1px solid black;
+            display: inline-block;
+            margin: 40px;
+        }
+
+        .red { background: red; }
+        .blue { background: blue; }
+        .green { background: green; }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <input type="text" v-on:input="changeName">
+    <input type="text" v-model.lazy="name">
+    <h1>String: {{ name }}</h1>
+    <h1>Sum: {{ 10 + 60 }}</h1>
+    <h1>Number: {{ number }}</h1>
+    <h1>Method: {{ sayHello() }}</h1>
+    <h1>If statement: {{ isOk ? 'I am OK' : 'I am not OK' }}</h1>
+    <h1>Functions: {{ string.split('').reverse().join('') }}</h1>
+    <h2>
+        <!--<a v-bind:href="url" target="_blank" v-on:click.prevent="">Google</a>-->
+        <a :href="url" target="_blank" v-on:click.prevent="">Google</a>
+    </h2>
+    <h2 v-html="link"></h2>
+    <h2>{{ title }} = {{ counter }}</h2>
+    <!--<button v-on:click="addCounter(5, 'Изменено на 5', $event)">Увеличить на 5</button>-->
+    <button @click="addCounter(5, 'Изменено на 5', $event)">Увеличить на 5</button>
+    <button v-on:click="addCounter(10, 'Изменено на 10', $event)">Увеличить на 10</button>
+    <hr>
+    <h2 v-on:mouseover="onHover">Счетчик 2 = {{ counter2 }}</h2>
+    <button v-on:click="counter2++">Увеличить</button>
+    <hr>
+    <h2 v-on:mousemove="handleMouseMove">
+        x: {{ x }} \ y: {{ y }}
+        <span v-on:mousemove.stop="">Не изменять</span>
+    </h2>
+    <hr>
+    <input type="text" v-on:keyup.enter.space="alertValue">
+    <hr>
+    <!--<div class="circle" @click="isActive = !isActive" :class="{'red': isActive, 'green': !isActive }"></div>-->
+    <!--<div class="circle" @click="isActive = !isActive" :class="getCssClasses()"></div>-->
+    <div class="circle" @click="isActive = !isActive" :class="getCssClasses"></div>
+    <div class="circle" :class="[color, {'red': isActive}]"></div>
+    <input type="text" v-model="color">
+    <input type="text" v-model="height">
+    <!--<div class="circle" :style="{'background': color, 'height': height + 'px'}"></div>-->
+    <div class="circle" :style="circleClasses"></div>
+    <div class="circle" :style="[circleClasses, {'width': height + 'px'}]"></div>
+    <hr>
+    <h2 v-if="type === 'a'">A</h2>
+    <h2 v-else-if="type === 'b'">B</h2>
+    <h2 v-else-if="type === 'c'">C</h2>
+    <h2 v-else>not match</h2>
+    <hr>
+    <input type="text" v-model="type">
+    <hr>
+    <template v-if="isVisible">
+        <h2>I am title</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis, neque.</p>
+    </template>
+    <template v-else>
+        <h2 style="color: red">I am title</h2>
+        <p style="color: blue">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis, neque.</p>
+    </template>
+    <button @click="isVisible = !isVisible">Toggle</button>
+    <hr>
+    <h2 v-show="isVisible">I am visible!</h2>
+    <h2 v-show="!isVisible" style="color: red">You can't see me</h2>
+    <button @click="isVisible = !isVisible">Toggle</button>
+    <hr>
+    <ul>
+        <li v-for="(person, index) of people">{{ index + 1 }}. {{ person.name }} - <b>{{ person.age }}</b></li>
+    </ul>
+    <hr>
+    <ol>
+        <li v-for="num in 10">{{ num }}</li>
+    </ol>
+    <hr>
+    <ul>
+        <li v-for="(value, key, index) in person"><i>{{index + 1}}</i> <b>{{ key }}</b> - {{ value }}</li>
+    </ul>
+    <hr>
+    <h2>Counter {{ counter }} \ {{ counter2 }}</h2>
+    <h3>Result: {{ result() }}</h3>
+    <h3>Computed result: {{ computedResult }}</h3>
+    <button @click="add">Add</button>
+    <button @click="sub">Sub</button>
+    <button @click="counter2++">Add counter 2</button>
+    <hr>
+    <h3>{{ newField }}</h3>
+</div>
+
+<hr>
+
+<div id="app2">
+    <h2 ref="heading">{{ title }}</h2>
+    <button @click="updateFirstName">Update First Name</button>
+</div>
+
+<hr>
+
+<div id="app3"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+<script>
+    const vue1 = new Vue({
+        el: '#app',
+        data: {
+            name: 'Vue!',
+            number: 100,
+            isOk: true,
+            string: 'My name is Andrey',
+            url: 'http://google.com',
+            link: '<a href="http://google.com">Google</a>',
+            counter: 0,
+            counter2: 0,
+            title: 'Счетчик',
+            x: 0,
+            y: 0,
+            isActive: false,
+            color: 'blue',
+            height: 100,
+            type: 'a',
+            isVisible: true,
+            people: [
+                { name: 'Vlad', age: 20 },
+                { name: 'Max', age: 25 },
+                { name: 'Elena', age: 30 },
+                { name: 'Volodya', age: 40 }
+            ],
+            person: {
+                name: 'Max',
+                age: 50,
+                job: 'Frontend'
+            },
+            condition: 'Less equal then 3'
+        },
+        computed: {
+            getCssClasses() {
+                return {
+                    'red': this.isActive,
+                    'green': !this.isActive
+                }
+            },
+            circleClasses() {
+                return {'background': this.color, 'height': this.height + 'px'}
+            },
+            computedResult() {
+                console.log('computedResult() was called')
+                return this.counter > 3 ? 'More then 3' : 'Less equal then 3'
+            }
+        },
+        watch: {
+            counter(value) {
+                console.log('From watch object', value)
+            }
+        },
+        methods: {
+            changeName: function(event) {
+                this.name = event.target.value
+            },
+
+            sayHello: function() {
+                return 'I am function'
+            },
+
+            addCounter: function(num, str, event) {
+                this.counter += num
+                this.title = str
+
+                if (num === 5) {
+                    // blue
+                    event.target.style.color = 'blue'
+                } else if (num === 10) {
+                    // red
+                    event.target.style.color = 'red'
+                }
+            },
+
+            onHover: function(event) {
+                event.target.style.color = 'red'
+            },
+
+            handleMouseMove: function(event) {
+                this.x = event.clientX
+                this.y = event.clientY
+            },
+
+            alertValue(event) {
+                //if (event.keyCode === 13) {
+                    alert(event.target.value)
+                //}
+            },
+
+            add() {
+                this.counter++
+            },
+
+            sub() {
+                this.counter--
+            },
+
+            result() {
+                console.log('result() was called')
+                return this.counter > 3 ? 'More then 3' : 'Less equal then 3';
+            }
+            /*getCssClasses() {
+                return {
+                    'red': this.isActive,
+                    'green': !this.isActive
+                }
+            }*/
+
+            /*clickOnGoogle: function(event) {
+                event.preventDefault()
+            }*/
+        }
+    })
+
+    vue1.newField = 'Random text'
+
+    const vue2 = new Vue({
+        data: {
+            title: 'Hello from Vue 2'
+        },
+        methods: {
+            updateFirstName() {
+                this.$refs.heading.style.color = 'red'
+                console.log(this.$refs)
+                vue1.name = 'Updated from second app'
+                vue1.newField = 'New newField'
+                setTimeout(() => {
+                    alert(vue1.sayHello())
+                }, 1000)
+            }
+        }
+    })
+
+    vue2.$mount('#app2')
+
+    const vue3 = new Vue({
+        data: {
+            title: 'Hello I am Vue3! '
+        },
+        methods: {
+            doDestroy() {
+                this.$destroy()
+            }
+        },
+        template: '<div><h1>{{ title }}</h1><p>Hello d</p><button @click="title = \'updated\'">Update Title</button> <button @click="doDestroy">Destroy</button></div>',
+        beforeCreate() {
+            console.log('Before Create')
+        },
+        created() {
+            console.log('Created')
+        },
+        beforeMount() {
+            console.log('Before Mount')
+        },
+        mounted() {
+            console.log('Mounted')
+        },
+        beforeUpdate() {
+            console.log('Before Update')
+        },
+        updated() {
+            console.log('Updated')
+        },
+        beforeDestroy() {
+            console.log('Before Destroy')
+        },
+        destroyed() {
+            console.log('Destroyed')
+        }
+    })
+
+    vue3.$mount('#app3')
+</script>
+</body>
+</html>
